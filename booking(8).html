@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Appointment | BankEase</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f5f8fc;
+    color:#1b1b1b;
+    min-height:100vh;
+}
+
+nav{
+    height:75px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 8%;
+    background:white;
+    box-shadow:0 2px 15px rgba(0,0,0,0.05);
+}
+
+.logo{
+    font-size:26px;
+    font-weight:800;
+    color:#12355b;
+    text-decoration:none;
+}
+
+.logo span{
+    color:#2f80ed;
+}
+
+.back-link{
+    color:#2f80ed;
+    text-decoration:none;
+    font-weight:500;
+    font-size:15px;
+}
+
+.page{
+    max-width:640px;
+    margin:0 auto;
+    padding:60px 20px 80px;
+}
+
+.page-header{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.page-header h1{
+    font-size:34px;
+    color:#12355b;
+}
+
+.page-header p{
+    margin-top:10px;
+    color:#666;
+    font-size:15px;
+}
+
+.form-box{
+    background:white;
+    padding:35px;
+    border-radius:18px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.08);
+}
+
+.field-label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    color:#12355b;
+    margin-bottom:6px;
+}
+
+.form-box input,
+.form-box select{
+    width:100%;
+    padding:13px;
+    margin-bottom:18px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    font-size:14px;
+    background:white;
+}
+
+.form-box input:focus,
+.form-box select:focus{
+    outline:none;
+    border-color:#2f80ed;
+}
+
+.book-btn{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:8px;
+    background:#2f80ed;
+    color:white;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.book-btn:hover{
+    background:#256fd1;
+}
+
+/* CONFIRMATION VIEW */
+
+.confirmation{
+    display:none;
+    text-align:center;
+    background:white;
+    padding:45px 35px;
+    border-radius:18px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.08);
+}
+
+.confirmation .icon{
+    font-size:60px;
+}
+
+.confirmation h2{
+    color:#12355b;
+    margin-top:15px;
+}
+
+.confirmation p{
+    color:#666;
+    margin-top:10px;
+}
+
+.token-box{
+    margin-top:25px;
+    background:#eef5ff;
+    padding:20px;
+    border-radius:12px;
+}
+
+.token-box p{
+    font-size:13px;
+    color:#666;
+    margin-top:0;
+}
+
+.token-box h2{
+    color:#2f80ed;
+    margin-top:5px;
+}
+
+.summary{
+    margin-top:25px;
+    text-align:left;
+    background:#f5f8fc;
+    padding:20px;
+    border-radius:12px;
+    font-size:14px;
+    color:#444;
+    line-height:1.9;
+}
+
+.summary b{
+    color:#12355b;
+}
+
+.close-btn{
+    margin-top:25px;
+    padding:12px 28px;
+    border:2px solid #2f80ed;
+    border-radius:8px;
+    background:white;
+    color:#2f80ed;
+    font-weight:600;
+    cursor:pointer;
+    font-size:15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+<a href="index.html" class="logo">Bank<span>Ease</span></a>
+<a href="index.html" class="back-link">← Back to Home</a>
+</nav>
+
+<div class="page">
+
+<div class="page-header" id="formHeader">
+<h1>Book Your Bank Visit</h1>
+<p>Fill in your details below to reserve a time slot and get a digital token.</p>
+</div>
+
+<!-- BOOKING FORM -->
+<div class="form-box" id="formBox">
+
+<form id="bookingForm" name="booking" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="bookAppointment(event)">
+<input type="hidden" name="form-name" value="booking">
+<p style="display:none;"><label>Don't fill this out: <input name="bot-field"></label></p>
+
+<label class="field-label" for="fullName">Full Name</label>
+<input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+
+<label class="field-label" for="phone">Phone Number</label>
+<input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" pattern="^(\+91[\-\s]?)?[6-9]\d{9}$" title="Enter a valid 10-digit Indian mobile number (starts with 6-9), optionally prefixed with +91" required>
+
+<label class="field-label" for="bank">Bank</label>
+<select id="bank" name="bank" required>
+<option value="">Select Bank</option>
+<option>State Bank of India</option>
+<option>HDFC Bank</option>
+<option>ICICI Bank</option>
+<option>Axis Bank</option>
+<option>Other Bank</option>
+</select>
+
+<label class="field-label" for="branch">Branch</label>
+<input type="text" id="branch" name="branch" placeholder="Enter branch name / location" required>
+<label class="field-label" for="service">Service</label>
+<select id="service" name="service" required>
+
+<option value="">Select Service</option>
+<option>Account Opening</option>
+<option>KYC Update</option>
+<option>Cash Services</option>
+<option>Cheque Services</option>
+<option>Debit Card Services</option>
+<option>Loan Enquiry</option>
+</select>
+<div id="docBox" style="display:none; background:#fff3cd; padding:15px; border-radius:10px; margin-bottom:15px;">
+    <b>Required Documents:</b>
+    <ul id="docList"></ul>
+</div>
+
+...
+</select>
+
+<div id="docBox" style="display:none; background:#fff3cd; padding:15px; border-radius:10px; margin-bottom:15px;">
+    <b>Required Documents:</b>
+    <ul id="docList"></ul>
+</div>
+
+<!-- ✅ PUT YOUR CODE HERE -->
+<label class="field-label" for="date">Date</label>
+<input type="date" id="date" name="date" required onchange="checkDay(this.value)">
+
+<label class="field-label" for="time">Time</label>
+<input type="time" id="time" name="time" required>
+
+<p id="dayStatus" style="font-size:13px;margin-bottom:10px;"></p>
+
+<!-- SUBMIT BUTTON -->
+<button class="book-btn" type="submit">Confirm Appointment</button>
+
+</form>
+
+</div>
+
+<!-- CONFIRMATION -->
+<div class="confirmation" id="confirmationBox">
+
+<div class="icon">🎉</div>
+<h2>Appointment Booked!</h2>
+<p>Your digital token has been generated. You'll get notifications as your turn approaches.</p>
+
+<div class="token-box">
+<p>Your Token</p>
+<h2 id="tokenNumber">A-32</h2>
+</div>
+
+<div class="summary" id="summaryBox"></div>
+
+<button class="close-btn" onclick="window.close(); window.location.href='index.html';">
+Back to Home
+</button>
+
+</div>
+
+</div>
+
+<script>
+const serviceDocs = {
+    "Account Opening": ["Aadhar Card", "PAN Card", "Photo"],
+    "KYC Update": ["Aadhar", "PAN"],
+    "Cash Services": ["Passbook"],
+    "Cheque Services": ["Cheque Book", "ID Proof"],
+    "Debit Card Services": ["Card / Account No"],
+    "Loan Enquiry": ["Income Proof", "ID"]
+};
+
+document.getElementById("service").addEventListener("change", function(){
+    const docBox = document.getElementById("docBox");
+    const docList = document.getElementById("docList");
+
+    if(serviceDocs[this.value]){
+        docList.innerHTML = serviceDocs[this.value].map(d => `<li>${d}</li>`).join("");
+        docBox.style.display = "block";
+    } else {
+        docBox.style.display = "none";
+    }
+});
+function checkDay(date){
+    const day = new Date(date).getDay();
+    const status = document.getElementById("dayStatus");
+
+    if(day === 0){
+        status.innerHTML = "❌ Sunday - Bank Closed";
+        status.style.color = "black";
+    } else {
+        const slots = Math.floor(Math.random()*10);
+
+        if(slots <= 2){
+            status.innerHTML = "🔴 Full";
+            status.style.color = "red";
+        } else if(slots <= 6){
+            status.innerHTML = "🟠 Medium";
+            status.style.color = "orange";
+        } else {
+            status.innerHTML = "🟢 Available";
+            status.style.color = "green";
+        }
+    }
+}
+const serviceTime = {
+    "Account Opening": "30-40 mins",
+    "KYC Update": "15 mins",
+    "Cash Services": "10 mins",
+    "Cheque Services": "20 mins",
+    "Debit Card Services": "15 mins",
+    "Loan Enquiry": "45 mins"
+};
+function bookAppointment(event){
+
+    event.preventDefault();
+
+    const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbx2gA8SB5gq7A6uMkz5MdL-q_OHezD4dI9fiCPQnjc67X28jUL-tHIZ3p4xom1bNjh1/exec";
+
+    const form = document.getElementById("bookingForm");
+    const name = document.getElementById("fullName").value;
+    const phone = document.getElementById("phone").value;
+    const bank = document.getElementById("bank").value;
+    const branch = document.getElementById("branch").value;
+    const service = document.getElementById("service").value;
+    const date = document.getElementById("date").value;
+    const time = document.getElementById("time").value;
+
+    // Send the submission to Netlify Forms so it's stored and emailed to you
+    const formData = new FormData(form);
+    fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formData).toString()
+    }).catch(err => console.error("Netlify form submission error:", err));
+
+    // Send the submission to your Google Sheet
+    fetch(GOOGLE_SHEET_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ fullName: name, phone: phone, bank: bank, branch: branch, service: service, date: date, time: time })
+    }).catch(err => console.error("Google Sheet submission error:", err));
+
+    const tokenNum = "A-" + (30 + Math.floor(Math.random() * 20));
+    document.getElementById("tokenNumber").innerText = tokenNum;
+
+    document.getElementById("summaryBox").innerHTML =
+        "<b>Name:</b> " + name + "<br>" +
+        "<b>Phone:</b> " + phone + "<br>" +
+        "<b>Bank:</b> " + bank + "<br>" +
+        "<b>Branch:</b> " + branch + "<br>" +
+        "<b>Service:</b> " + service + "<br>" +
+        "<b>Estimated Time:</b> " + serviceTime[service] + "<br>" +
+        "<b>Date:</b> " + date + "<br>" +
+        "<b>Time:</b> " + time;
+
+    document.getElementById("formBox").style.display = "none";
+    document.getElementById("formHeader").style.display = "none";
+    document.getElementById("confirmationBox").style.display = "block";
+
+}
+
+</script>
+
+</body>
+</html>
